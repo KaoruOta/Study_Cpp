@@ -20,9 +20,9 @@ bool test_normalize() {
 	int i,j;
 
 	for (i=0; i<2; i++) {
-		for(j=0; j<2; j++) {
-			unnormalized[i][j] = 1.0;
-			normalized[i][j] = 0.25;
+	  for(j=0; j<2; j++) {
+	    unnormalized[i][j] = 1.0;
+	    normalized[i][j] = 0.25;
 		}
 	}
 
@@ -189,6 +189,7 @@ bool test_move() {
 		cout << "\nWhen it should have returned the following:\n";
 		show_grid(correct);
 	}
+
 	return right;
 }
 
@@ -278,6 +279,8 @@ bool test_localizer() {
 	if (!question_correct) {
 		correct = false;
 	}
+
+
 	return correct;
 }
 

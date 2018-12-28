@@ -40,11 +40,26 @@ using namespace std;
            0.25 0.25
 */
 vector< vector <float> > initialize_beliefs(vector< vector <char> > grid) {
-	vector< vector <float> > newGrid;
+  vector< vector <float> > newGrid;
 
-	// your code here
-	
-	return newGrid;
+  // your code here
+  int i, j;
+  int height;
+  int width;
+  vector <float> newRow;
+
+  height = grid.size();
+  width  = grid[0].size();
+
+  for (i=0; i<height; i++) {
+    newRow.clear();
+    for (j=0; j<width; j++) {
+      newRow.push_back(1.0);
+    }
+    newGrid.push_back(newRow);
+  }
+
+  return normalize(newGrid);
 }
 
 /**
@@ -91,7 +106,36 @@ vector< vector <float> > move(int dy, int dx,
 
   vector < vector <float> > newGrid;
 
+  
   // your code here
+  int i, j;
+  int l, m;
+  int height;
+  int width;
+  vector <float> newRow;
+
+  height = beliefs.size();
+  width  = beliefs[0].size();
+  
+  for (i=0; i<height; i++) {
+    newRow.clear();
+
+    l = (i-dy)%height;
+    if(l < 0){
+      l = height + l;
+    }
+
+    for (j=0; j<width; j++) {
+
+      m = (j-dx)%width;
+
+      if(m < 0){
+	m = width + m;
+      }
+      newRow.push_back(beliefs[l][m]);
+    }
+    newGrid.push_back(newRow);
+  }
 
   return blur(newGrid, blurring);
 }
@@ -140,9 +184,31 @@ vector< vector <float> > sense(char color,
 	float p_hit,
 	float p_miss) 
 {
-	vector< vector <float> > newGrid;
+  vector< vector <float> > newGrid;
 
-	// your code here
+  // your code here
+  int i, j;
+  int l, m;
+  int height;
+  int width;
 
-	return normalize(newGrid);
+  vector <float> newRow;
+
+  height = beliefs.size();
+  width  = beliefs[0].size();
+
+  for (i=0; i<height; i++) {
+    newRow.clear();
+    for (j=0; j<width; j++) {
+      
+      if(grid[i][j] == color){
+	newRow.push_back( p_hit * beliefs[i][j] );
+      }else{
+	newRow.push_back( p_miss * beliefs[i][j] );
+      }
+    }
+    newGrid.push_back(newRow);
+  }
+
+  return normalize(newGrid);
 }
