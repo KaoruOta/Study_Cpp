@@ -34,13 +34,15 @@ using namespace std;
 */
 vector< vector<float> > normalize(vector< vector <float> > grid) {
 	
-	vector< vector<float> > newGrid;
+  //	vector< vector<float> > newGrid;
 
 	// todo - your code here
-	vector <float> newRow;
-	int row,column;
-	float sum = 0;
+  //	vector <float> newRow;
+  //	int row,column;
+	float total = 0;
 	float v;
+
+	/*
 	for (row = 0; row < grid.size();row++){
 	  for (column = 0; column < grid[0].size(); column++){
 	    sum = sum + grid[row][column];
@@ -55,8 +57,26 @@ vector< vector<float> > normalize(vector< vector <float> > grid) {
 	  }
 	  newGrid.push_back(newRow);
 	}
+	*/
 
-	return newGrid;
+	for (auto &row: grid) 
+	  {
+	    for (auto &col: row)
+	      {
+		total += col;
+	      }
+	  }
+
+	for (auto &row: grid) 
+	  {
+	    for (auto &col: row) 
+	      {
+		col /= total;
+	      }
+	  }
+
+	//	return newGrid;
+	return grid;
 }
 
 /**
@@ -133,43 +153,24 @@ vector < vector <float> > blur(vector < vector < float> > grid, float blurring) 
 	window[2][1] = adjacent_prob;
 	window[2][2] = corner_prob;
 
-	newGrid[0][0] = grid[0][0]*window[1][1] + grid[0][1]*window[1][2] + grid[0][2]*window[1][0] +
-	  grid[1][0]*window[2][1] + grid[1][1]*window[2][2] + grid[1][2]*window[2][0] +
-	  grid[2][0]*window[0][1] + grid[2][1]*window[0][2] + grid[2][2]*window[0][0];
+	//---- Modify 20181229 ----//
+	for (int i = 0; i<height; ++i)
+	  {
+	    for (int j = 0; j<width; ++j)
+	      {
+		float grid_val = grid[i][j];
+		for (int dx = -1; dx<2; ++dx)
+		  {
+		    for (int dy = -1; dy<2; ++dy)
+		      {
+			int new_i = (i + dy + height) % height;
+			int new_j = (j + dx + width) % width;
+			newGrid[new_i][new_j] += window[dx+1][dy+1] * grid_val;                    
+		      }
+		  }
+	      }
+	  }
 
-	newGrid[0][1] = grid[0][0]*window[1][0] + grid[0][1]*window[1][1] + grid[0][2]*window[1][2] +
-	  grid[1][0]*window[2][0] + grid[1][1]*window[2][1] + grid[1][2]*window[2][2] +
-	  grid[2][0]*window[0][0] + grid[2][1]*window[0][1] + grid[2][2]*window[0][2];
-
-	newGrid[0][2] = grid[0][0]*window[1][2] + grid[0][1]*window[1][0] + grid[0][2]*window[1][1] +
-	  grid[1][0]*window[2][2] + grid[1][1]*window[2][0] + grid[1][2]*window[2][1] +
-	  grid[2][0]*window[0][2] + grid[2][1]*window[0][0] + grid[2][2]*window[0][1];
-
-
-	newGrid[1][0] = grid[0][0]*window[0][1] + grid[0][1]*window[0][2] + grid[0][2]*window[0][0] +
-	  grid[1][0]*window[1][1] + grid[1][1]*window[1][2] + grid[1][2]*window[1][0] +
-	  grid[2][0]*window[2][1] + grid[2][1]*window[2][2] + grid[2][2]*window[2][0];
-
-	newGrid[1][1] = grid[0][0]*window[0][0] + grid[0][1]*window[0][1] + grid[0][2]*window[0][2] +
-	  grid[1][0]*window[1][0] + grid[1][1]*window[1][1] + grid[1][2]*window[1][2] +
-	  grid[2][0]*window[2][0] + grid[2][1]*window[2][1] + grid[2][2]*window[2][2];
-
-	newGrid[1][2] = grid[0][0]*window[0][2] + grid[0][1]*window[0][0] + grid[0][2]*window[0][1] +
-	  grid[1][0]*window[1][2] + grid[1][1]*window[1][0] + grid[1][2]*window[1][1] +
-	  grid[2][0]*window[2][2] + grid[2][1]*window[2][0] + grid[2][2]*window[2][1];
-
-
-	newGrid[2][0] = grid[0][0]*window[2][1] + grid[0][1]*window[2][2] + grid[0][2]*window[2][0] +
-	  grid[1][0]*window[0][1] + grid[1][1]*window[0][2] + grid[1][2]*window[0][0] +
-	  grid[2][0]*window[1][1] + grid[2][1]*window[1][2] + grid[2][2]*window[1][0];
-
-	newGrid[2][1] = grid[0][0]*window[2][0] + grid[0][1]*window[2][1] + grid[0][2]*window[2][2] +
-	  grid[1][0]*window[0][0] + grid[1][1]*window[0][1] + grid[1][2]*window[0][2] +
-	  grid[2][0]*window[1][0] + grid[2][1]*window[1][1] + grid[2][2]*window[1][2];
-
-	newGrid[2][2] = grid[0][0]*window[2][2] + grid[0][1]*window[2][0] + grid[0][2]*window[2][1] +
-	  grid[1][0]*window[0][2] + grid[1][1]*window[0][0] + grid[1][2]*window[0][1] +
-	  grid[2][0]*window[1][2] + grid[2][1]*window[1][0] + grid[2][2]*window[1][1];
 
 	return normalize(newGrid);
 }

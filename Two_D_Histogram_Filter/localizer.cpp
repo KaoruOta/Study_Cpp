@@ -51,13 +51,15 @@ vector< vector <float> > initialize_beliefs(vector< vector <char> > grid) {
   height = grid.size();
   width  = grid[0].size();
 
-  for (i=0; i<height; i++) {
-    newRow.clear();
-    for (j=0; j<width; j++) {
-      newRow.push_back(1.0);
+  for (i=0; i<height; i++)
+    {
+      newRow.clear();
+      for (j=0; j<width; j++)
+	{
+	  newRow.push_back(1.0);
+	}
+      newGrid.push_back(newRow);
     }
-    newGrid.push_back(newRow);
-  }
 
   return normalize(newGrid);
 }
