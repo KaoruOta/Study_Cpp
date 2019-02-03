@@ -92,10 +92,11 @@ long int C(int n, int m){
 }
 
 long int C_(int n, int m,long int *c[]){
+  c_cnt++;
   if( c[n][m]!=none ) return c[n][m];
   if( m==0 ) return c[n][m]= 1;
   if( m==n ) return c[n][m]= 1;
-  c_cnt++;
+
 
   return c[n][m]= C_(n-1,m,c)+C_(n-1,m-1,c);
 }
